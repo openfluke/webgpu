@@ -47,3 +47,11 @@ func (g Buffer) Unmap() (err error) {
 }
 
 func (g Buffer) Release() {} // no-op
+
+func (g Buffer) GetSize() uint64 {
+	sizeVal := g.jsValue.Get("size")
+	if sizeVal.Type() == js.TypeUndefined {
+		return 0 // fallback or error
+	}
+	return uint64(sizeVal.Int())
+}
