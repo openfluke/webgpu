@@ -6,7 +6,7 @@ import (
 	"fmt"
 	"syscall/js"
 
-	"github.com/cogentcore/webgpu/jsx"
+	"github.com/openfluke/webgpu/jsx"
 )
 
 // Adapter as described:

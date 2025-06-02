@@ -7,7 +7,7 @@ import (
 	"log"
 	"syscall/js"
 
-	"github.com/cogentcore/webgpu/jsx"
+	"github.com/openfluke/webgpu/jsx"
 )
 
 // Instance as described:
