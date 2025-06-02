@@ -31,3 +31,9 @@ func (g ComputePipeline) toJS() any {
 }
 
 func (g ComputePipeline) Release() {} // no-op
+
+func (g ComputePipeline) GetBindGroupLayout(groupIndex uint32) *BindGroupLayout {
+	return &BindGroupLayout{
+		jsValue: g.jsValue.Call("getBindGroupLayout", groupIndex),
+	}
+}
