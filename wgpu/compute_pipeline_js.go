@@ -9,12 +9,14 @@ import (
 // ComputePipelineDescriptor as described:
 // https://gpuweb.github.io/gpuweb/#dictdef-gpucomputepipelinedescriptor
 type ComputePipelineDescriptor struct {
+	Label   string
 	Layout  *PipelineLayout
 	Compute ProgrammableStageDescriptor
 }
 
 func (g ComputePipelineDescriptor) toJS() any {
 	result := make(map[string]any)
+	result["label"] = g.Label
 	result["layout"] = pointerToJS(g.Layout)
 	result["compute"] = g.Compute.toJS()
 	return result
