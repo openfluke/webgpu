@@ -4,8 +4,6 @@ package wgpu
 
 import (
 	"syscall/js"
-
-	"github.com/openfluke/webgpu/jsx"
 )
 
 // Buffer as described:
@@ -36,9 +34,25 @@ func (g Buffer) GetMappedRange(offset, size uint) []byte {
 }
 
 func (g Buffer) MapAsync(mode MapMode, offset uint64, size uint64, callback BufferMapCallback) (err error) {
-	jsx.Await(g.jsValue.Call("mapAsync", uint32(mode), offset, size))
-	callback(BufferMapAsyncStatusSuccess) // TODO(kai): is this the right thing to do?
-	return
+
+	promise := g.jsValue.Call("mapAsync", uint32(mode), offset, size)
+
+	// Set up success handler
+	successCallback := js.FuncOf(func(this js.Value, args []js.Value) interface{} {
+		callback(BufferMapAsyncStatusSuccess)
+		return nil
+	})
+
+	// Set up error handler
+	errorCallback := js.FuncOf(func(this js.Value, args []js.Value) interface{} {
+		callback(BufferMapAsyncStatusError) // or whatever error status you want
+		return nil
+	})
+
+	// Handle the promise
+	promise.Call("then", successCallback).Call("catch", errorCallback)
+
+	return nil
 }
 
 func (g Buffer) Unmap() (err error) {
