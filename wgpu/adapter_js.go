@@ -25,11 +25,10 @@ func (g Adapter) RequestDevice(descriptor *DeviceDescriptor) (*Device, error) {
 	}
 
 	// Also get the queue since Device will need it
-	queue := js.Global().Get("webgpuQueue")
+	//queue := js.Global().Get("webgpuQueue")
 
 	return &Device{
 		jsValue: device,
-		queue:   &Queue{jsValue: queue},
 	}, nil
 }
 

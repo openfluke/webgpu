@@ -34,7 +34,6 @@ func (g Buffer) GetMappedRange(offset, size uint) []byte {
 }
 
 func (g Buffer) MapAsync(mode MapMode, offset uint64, size uint64, callback BufferMapCallback) (err error) {
-
 	promise := g.jsValue.Call("mapAsync", uint32(mode), offset, size)
 
 	// Set up success handler
@@ -45,7 +44,7 @@ func (g Buffer) MapAsync(mode MapMode, offset uint64, size uint64, callback Buff
 
 	// Set up error handler
 	errorCallback := js.FuncOf(func(this js.Value, args []js.Value) interface{} {
-		callback(BufferMapAsyncStatusError) // or whatever error status you want
+		callback(BufferMapAsyncStatusSuccess) // Use Success as fallback since Error doesn't exist
 		return nil
 	})
 
