@@ -25,7 +25,7 @@ Native builds use **wgpu-native v29** with Go-side bindings (no C compatibility 
 | macOS | `darwin/amd64`, `darwin/arm64` |
 | Linux | `linux/amd64`, `linux/arm64` |
 | Windows | `windows/amd64` (gnu), `windows/arm64` (msvc static) |
-| iOS | `ios/arm64` (device), `ios/amd64` (x86_64 simulator) |
+| iOS | `ios/arm64` (device and Apple Silicon simulator) |
 | Android | `android/arm64`, `android/arm`, `android/amd64`, `android/386` |
 
 ### Go binding highlights (native)
