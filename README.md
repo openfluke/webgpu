@@ -5,14 +5,16 @@ Go bindings for [WebGPU](https://gpuweb.github.io/gpuweb/), maintained by [openf
 Native builds use **wgpu-native v29** with Go-side bindings (no C compatibility shims). The same module also supports the browser via WASM. Targets include Vulkan, Metal, D3D12, and OpenGL ES.
 
 **Module:** `github.com/openfluke/webgpu`  
-**Current release:** `v1.0.2` (ships wgpu-native **v29.0.0.0**)
+**Current release:** `v1.0.4` (ships wgpu-native **v29.0.0.0**)
 
 ## Version history
 
 | Tag | What it was |
 |-----|-------------|
 | `v1.0.0` | Initial openfluke release: v29 Go bindings + v29 static libs |
-| **`v1.0.2`** | Drops legacy `ios/amd64` (Intel simulator); fixes `go get` module size limit |
+| `v1.0.2` | Do not use — Go proxy cached wrong commit |
+| `v1.0.3` | Do not use — Go proxy cached wrong commit |
+| **`v1.0.4`** | Drops legacy `ios/amd64`; fixes `go get` module size limit |
 
 ## What's in v1.0.0
 
@@ -52,7 +54,7 @@ Other platforms have matching v29 libs in-tree; smoke-test on each target you sh
 ## Install
 
 ```bash
-go get github.com/openfluke/webgpu@v1.0.2
+go get github.com/openfluke/webgpu@v1.0.4
 ```
 
 Local development (e.g. from the endgame monorepo):
