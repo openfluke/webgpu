@@ -1,7 +1,8 @@
 package main
 
 //go:generate go build
-//go:generate ./enums -i ../../wgpu/lib/wgpu.h -o ../../wgpu/enums.go -pkg wgpu
+//go:generate ./enums -i ../../wgpu/lib/webgpu.h -o ../../wgpu/enums.go -pkg wgpu
+// On macOS, prefer: python3 regen.py (from this directory)
 
 import (
 	"bytes"

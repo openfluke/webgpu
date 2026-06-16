@@ -5,7 +5,7 @@ Go bindings for [WebGPU](https://gpuweb.github.io/gpuweb/), maintained by [openf
 Native builds use **wgpu-native v29** with Go-side bindings (no C compatibility shims). The same module also supports the browser via WASM. Targets include Vulkan, Metal, D3D12, and OpenGL ES.
 
 **Module:** `github.com/openfluke/webgpu`  
-**Current release:** `v1.0.4` (ships wgpu-native **v29.0.0.0**)
+**Current release:** `v1.0.5` (ships wgpu-native **v29.0.0.0**)
 
 ## Version history
 
@@ -15,6 +15,17 @@ Native builds use **wgpu-native v29** with Go-side bindings (no C compatibility 
 | `v1.0.2` | Do not use — Go proxy cached wrong commit |
 | `v1.0.3` | Do not use — Go proxy cached wrong commit |
 | **`v1.0.4`** | Drops legacy `ios/amd64`; fixes `go get` module size limit |
+| **`v1.0.5`** | Full `enums.go` regen from `webgpu.h` + `wgpu.h` (v29 values); stops enum drift panics |
+
+**Monorepo note:** `wgpu/enums.go` must match `wgpu/lib/webgpu.h` and `wgpu/lib/wgpu.h`. Regenerate when headers change:
+
+```bash
+python3 cmd/enums/regen.py
+```
+
+(`go generate` in `cmd/enums` also works on Linux; on macOS use `regen.py` because the C parser chokes on `_Float16`.)
+
+Drift causes native panics (e.g. *Depth write enabled for non-depth format*) when creating render pipelines.
 
 ## What's in v1.0.0
 
@@ -54,7 +65,7 @@ Other platforms have matching v29 libs in-tree; smoke-test on each target you sh
 ## Install
 
 ```bash
-go get github.com/openfluke/webgpu@v1.0.4
+go get github.com/openfluke/webgpu@v1.0.5
 ```
 
 Local development (e.g. from the endgame monorepo):
