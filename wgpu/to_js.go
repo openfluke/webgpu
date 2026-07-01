@@ -78,10 +78,10 @@ func (g *DeviceDescriptor) toJS() any {
 func (g *SurfaceConfiguration) toJS() any {
 	result := make(map[string]any)
 	result["usage"] = uint32(g.Usage)
-	result["format"] = enumToJS(g.Format)
+	result["format"] = textureFormatToJS(g.Format)
 	result["alphaMode"] = enumToJS(g.AlphaMode)
 	result["viewFormats"] = mapSlice(g.ViewFormats, func(f TextureFormat) any {
-		return enumToJS(f)
+		return textureFormatToJS(f)
 	})
 	return result
 }
@@ -92,7 +92,7 @@ func (g *TextureDescriptor) toJS() any {
 		"usage":         uint32(g.Usage),
 		"dimension":     enumToJS(g.Dimension),
 		"size":          g.Size.toJS(),
-		"format":        enumToJS(g.Format),
+		"format":        textureFormatToJS(g.Format),
 		"mipLevelCount": g.MipLevelCount,
 		"sampleCount":   g.SampleCount,
 	}
@@ -101,7 +101,7 @@ func (g *TextureDescriptor) toJS() any {
 func (g *TextureViewDescriptor) toJS() any {
 	return map[string]any{
 		"label":           g.Label,
-		"format":          enumToJS(g.Format),
+		"format":          textureFormatToJS(g.Format),
 		"dimension":       enumToJS(g.Dimension),
 		"baseMipLevel":    g.BaseMipLevel,
 		"mipLevelCount":   g.MipLevelCount,

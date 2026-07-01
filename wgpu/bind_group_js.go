@@ -61,7 +61,7 @@ type StorageTextureBindingLayout struct {
 func (g StorageTextureBindingLayout) toJS() any {
 	result := make(map[string]any)
 	result["access"] = enumToJS(g.Access)
-	result["format"] = enumToJS(g.Format)
+	result["format"] = textureFormatToJS(g.Format)
 	result["viewDimension"] = enumToJS(g.ViewDimension)
 	return result
 }

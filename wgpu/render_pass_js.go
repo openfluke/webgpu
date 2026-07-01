@@ -79,6 +79,14 @@ func (g RenderPassEncoder) DrawIndexed(indexCount uint32, instanceCount uint32, 
 	g.jsValue.Call("drawIndexed", params...)
 }
 
+func (g RenderPassEncoder) SetViewport(x, y, width, height, minDepth, maxDepth float32) {
+	g.jsValue.Call("setViewport", x, y, width, height, minDepth, maxDepth)
+}
+
+func (g RenderPassEncoder) SetScissorRect(x, y, width, height uint32) {
+	g.jsValue.Call("setScissorRect", x, y, width, height)
+}
+
 // End as described:
 // https://gpuweb.github.io/gpuweb/#dom-gpurenderpassencoder-end
 func (g RenderPassEncoder) End() error {

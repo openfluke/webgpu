@@ -138,7 +138,7 @@ type DepthStencilState struct {
 
 func (g DepthStencilState) toJS() any {
 	result := make(map[string]any)
-	result["format"] = enumToJS(g.Format)
+	result["format"] = textureFormatToJS(g.Format)
 	result["depthWriteEnabled"] = g.DepthWriteEnabled
 	result["depthCompare"] = enumToJS(g.DepthCompare)
 	result["stencilFront"] = g.StencilFront.toJS()
@@ -207,7 +207,7 @@ type ColorTargetState struct {
 
 func (g ColorTargetState) toJS() any {
 	result := make(map[string]any)
-	result["format"] = enumToJS(g.Format)
+	result["format"] = textureFormatToJS(g.Format)
 	result["blend"] = pointerToJS(g.Blend)
 	result["writeMask"] = uint32(g.WriteMask)
 	return result

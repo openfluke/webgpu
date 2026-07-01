@@ -10,14 +10,26 @@ import (
 	"unsafe"
 )
 
-// BytesToJS converts the given bytes to a js Uint8ClampedArray
-// by using the global wasm memory bytes. This avoids the
-// copying present in [js.CopyBytesToJS].
+// BytesToJS converts Go bytes to a JS Uint8Array for queue.writeBuffer/writeTexture.
+// Uses zero-copy wasm linear memory when a host exposes window.wasm.instance.exports.mem;
+// otherwise copies via js.CopyBytesToJS (standard Go wasm_exec.js).
 func BytesToJS(b []byte) js.Value {
-	ptr := uintptr(unsafe.Pointer(&b[0]))
-	// We directly pass the offset and length to the constructor to avoid calling subarray or slice,
-	// thereby improving performance and safety (this fixes a detached array buffer crash).
-	return js.Global().Get("Uint8ClampedArray").New(js.Global().Get("wasm").Get("instance").Get("exports").Get("mem").Get("buffer"), ptr, len(b))
+	if len(b) == 0 {
+		return js.Global().Get("Uint8Array").New(0)
+	}
+
+	wasm := js.Global().Get("wasm")
+	if wasm.Truthy() {
+		mem := wasm.Get("instance").Get("exports").Get("mem")
+		if mem.Truthy() {
+			ptr := uintptr(unsafe.Pointer(&b[0]))
+			return js.Global().Get("Uint8Array").New(mem.Get("buffer"), ptr, len(b))
+		}
+	}
+
+	arr := js.Global().Get("Uint8Array").New(len(b))
+	js.CopyBytesToJS(arr, b)
+	return arr
 }
 
 // Await is a helper function equivalent to await in JS.
