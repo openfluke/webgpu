@@ -38,7 +38,7 @@ Drift causes native panics (e.g. *Depth write enabled for non-depth format*) whe
 |----------|------|
 | macOS | `darwin/amd64`, `darwin/arm64` |
 | Linux | `linux/amd64`, `linux/arm64` |
-| Windows | `windows/amd64` (gnu), `windows/arm64` (msvc static) |
+| Windows | `windows/amd64` (gnu), `windows/arm64` (gnu / gnullvm) |
 | iOS | `ios/arm64` (device and Apple Silicon simulator) |
 | Android | `android/arm64`, `android/arm`, `android/amd64`, `android/386` |
 
@@ -93,11 +93,18 @@ import "github.com/openfluke/webgpu/wgpu"
 
 ## Rebuilding native libs
 
-Vendored artifacts came from official **wgpu-native v29** release zips. To refresh:
+Vendored artifacts came from official **wgpu-native v29** release zips where available. To refresh:
 
 1. Download matching `wgpu-*-release.zip` from [wgpu-native releases](https://github.com/gfx-rs/wgpu-native/releases)
 2. Copy `lib/libwgpu_native.a` into the corresponding `wgpu/lib/<platform>/<arch>/` directory
 3. Ensure shared headers under `wgpu/lib/` stay in sync with that release
+
+**Windows arm64 exception:** upstream only publishes `wgpu-windows-aarch64-msvc-*`. That MSVC static lib does not link with Go CGO (llvm-mingw / gnu), which is what Welvet and this module use on Windows. Rebuild a **gnullvm** static lib instead:
+
+```powershell
+# Needs: rustup target aarch64-pc-windows-gnullvm, llvm-mingw, LLVM (libclang)
+.\scripts\build_windows_arm64_gnu.ps1
+```
 
 CI can also rebuild via [.github/workflows/build-wgpu.yml](.github/workflows/build-wgpu.yml) (`workflow_dispatch`).
 

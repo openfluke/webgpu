@@ -31,6 +31,29 @@ jobs:
               choco install -y --force llvm | exit 0
               echo "LIBCLANG_PATH=C:\Program Files\LLVM\lib" >> $GITHUB_ENV
 
+          # Upstream wgpu-native only ships aarch64-msvc zips. Cross-build
+          # aarch64-pc-windows-gnullvm so Go+CGO (llvm-mingw) links like amd64.
+          - name: build - windows/arm64
+            os: windows-2022
+            target: aarch64-pc-windows-gnullvm
+            goos: windows
+            goarch: arm64
+            setup_env: |
+              set -ex
+              choco install -y --force llvm | exit 0
+              echo "LIBCLANG_PATH=C:\Program Files\LLVM\bin" >> $GITHUB_ENV
+              # Host is amd64; toolchain still targets aarch64 via llvm-mingw
+              curl -L -o "$RUNNER_TEMP/llvm-mingw.zip" \
+                "https://github.com/mstorsjo/llvm-mingw/releases/download/20241030/llvm-mingw-20241030-ucrt-x86_64.zip"
+              unzip -q "$RUNNER_TEMP/llvm-mingw.zip" -d "$RUNNER_TEMP"
+              LLVM_MINGW_HOME=$(echo "$RUNNER_TEMP"/llvm-mingw-*-ucrt-x86_64)
+              echo "LLVM_MINGW_HOME=$LLVM_MINGW_HOME" >> $GITHUB_ENV
+              echo "$LLVM_MINGW_HOME/bin" >> $GITHUB_PATH
+              echo "CC=aarch64-w64-mingw32-clang" >> $GITHUB_ENV
+              echo "CXX=aarch64-w64-mingw32-clang++" >> $GITHUB_ENV
+              echo "CARGO_TARGET_AARCH64_PC_WINDOWS_GNULLVM_LINKER=$LLVM_MINGW_HOME/bin/aarch64-w64-mingw32-clang.exe" >> $GITHUB_ENV
+              echo "BINDGEN_EXTRA_CLANG_ARGS=--target=aarch64-w64-windows-gnu" >> $GITHUB_ENV
+
           - name: build - darwin/amd64
             os: macos-13
             target: x86_64-apple-darwin
@@ -196,7 +219,8 @@ jobs:
               "ios_amd64"
               "ios_arm64"
               "linux_amd64"
-              "windows_amd64")
+              "windows_amd64"
+              "windows_arm64")
 
           for i in "${arr[@]}"
           do
